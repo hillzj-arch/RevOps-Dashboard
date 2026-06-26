@@ -42,7 +42,7 @@ export function BarChart({ data, xKey, bars, title, formatValue, showLabels, hei
                   dataKey={bar.key}
                   position="top"
                   style={{ fontSize: 11, fill: "#6b7280" }}
-                  formatter={(v: number) => formatValue ? formatValue(v) : v}
+                  formatter={(v: unknown) => formatValue ? formatValue(Number(v)) : String(v)}
                 />
               )}
             </Bar>
