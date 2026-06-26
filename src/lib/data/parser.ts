@@ -1,5 +1,5 @@
 import Papa from "papaparse"
-import * as XLSX from "xlsx"
+import ExcelJS from "exceljs"
 import { Deal } from "./schema"
 
 const COLUMN_MAP: Record<string, keyof Deal> = {
@@ -115,12 +115,27 @@ export async function parseFile(file: File): Promise<Deal[]> {
 
   if (ext === "xlsx" || ext === "xls") {
     const buffer = await file.arrayBuffer()
-    const workbook = XLSX.read(buffer, { type: "array", cellDates: true })
-    const sheet = workbook.Sheets[workbook.SheetNames[0]]
-    const rows = XLSX.utils.sheet_to_json<Record<string, string>>(sheet, {
-      raw: false,
-      dateNF: "yyyy-mm-dd",
+    const workbook = new ExcelJS.Workbook()
+    await workbook.xlsx.load(buffer)
+    const worksheet = workbook.worksheets[0]
+
+    const rows: Record<string, string>[] = []
+    let headers: string[] = []
+
+    worksheet.eachRow((row, rowNumber) => {
+      const cells = (row.values as ExcelJS.CellValue[]).slice(1)
+      if (rowNumber === 1) {
+        headers = cells.map((v) => String(v ?? "").trim())
+      } else {
+        const obj: Record<string, string> = {}
+        cells.forEach((v, i) => {
+          if (!headers[i]) return
+          obj[headers[i]] = v instanceof Date ? v.toISOString().slice(0, 10) : String(v ?? "").trim()
+        })
+        rows.push(obj)
+      }
     })
+
     return rows.map(normalizeRow)
   }
 
