@@ -6,12 +6,13 @@ export async function POST(request: NextRequest) {
   const { username, password } = await request.json()
 
   const validUsername = process.env.DEMO_USERNAME
-  const passwordHash = process.env.DEMO_PASSWORD_HASH
+  const passwordHashB64 = process.env.DEMO_PASSWORD_HASH
 
-  if (!validUsername || !passwordHash) {
+  if (!validUsername || !passwordHashB64) {
     return NextResponse.json({ error: "Auth not configured" }, { status: 500 })
   }
 
+  const passwordHash = Buffer.from(passwordHashB64, "base64").toString("utf8")
   const usernameMatch = username === validUsername
   const passwordMatch = await bcrypt.compare(password, passwordHash)
 
