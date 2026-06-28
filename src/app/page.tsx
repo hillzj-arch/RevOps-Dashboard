@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { CopilotKit } from "@copilotkit/react-core"
 import { DealsProvider, useDeals } from "@/lib/data/deals-context"
 import { FileUpload } from "@/components/upload/FileUpload"
@@ -26,7 +27,19 @@ async function handleLogout() {
   window.location.href = "/login"
 }
 
-function Dashboard() {
+function CopilotErrorBanner({ message, onDismiss }: { message: string; onDismiss: () => void }) {
+  return (
+    <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 flex items-start gap-3 text-sm text-red-800">
+      <svg className="h-4 w-4 mt-0.5 shrink-0 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
+      </svg>
+      <span className="flex-1">{message}</span>
+      <button onClick={onDismiss} className="text-red-400 hover:text-red-600 leading-none text-lg">&times;</button>
+    </div>
+  )
+}
+
+function Dashboard({ copilotError, onDismissCopilotError }: { copilotError: string | null; onDismissCopilotError: () => void }) {
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white border-b border-gray-200 px-6 py-4">
@@ -45,6 +58,7 @@ function Dashboard() {
       </header>
       <main className="max-w-7xl mx-auto px-6 py-6 space-y-4">
         <DemoBanner />
+        {copilotError && <CopilotErrorBanner message={copilotError} onDismiss={onDismissCopilotError} />}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <WinRateCard />
           <PipelineCard />
@@ -60,10 +74,28 @@ function Dashboard() {
 }
 
 export default function Home() {
+  const [copilotError, setCopilotError] = useState<string | null>(null)
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function handleCopilotError(errorEvent: any) {
+    const status = errorEvent.context?.response?.status
+    const msg: string = errorEvent.error?.message ?? ""
+
+    if (status === 402 || /credit|balance|quota/i.test(msg)) {
+      setCopilotError("Your Anthropic account has insufficient credits. Top up at console.anthropic.com to continue using the AI assistant.")
+    } else if (status === 401 || status === 403) {
+      setCopilotError("Anthropic API key is invalid or missing. Check the ANTHROPIC_API_KEY environment variable in Vercel.")
+    } else if (msg) {
+      setCopilotError(`AI assistant error: ${msg}`)
+    } else {
+      setCopilotError("The AI assistant encountered an error. Please try again.")
+    }
+  }
+
   return (
-    <CopilotKit runtimeUrl="/api/copilotkit">
+    <CopilotKit runtimeUrl="/api/copilotkit" onError={handleCopilotError}>
       <DealsProvider>
-        <Dashboard />
+        <Dashboard copilotError={copilotError} onDismissCopilotError={() => setCopilotError(null)} />
       </DealsProvider>
     </CopilotKit>
   )
