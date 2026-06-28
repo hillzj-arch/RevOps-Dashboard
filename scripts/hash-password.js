@@ -1,4 +1,4 @@
-const bcrypt = require("bcryptjs")
+import bcrypt from "bcryptjs"
 
 const password = process.argv[2]
 if (!password) {
@@ -7,6 +7,9 @@ if (!password) {
 }
 
 bcrypt.hash(password, 12).then((hash) => {
-  console.log("\nAdd this to .env.local and Vercel environment variables:\n")
-  console.log(`DEMO_PASSWORD_HASH=${hash}\n`)
+  console.log("\n--- For .env.local (single quotes prevent $ expansion) ---")
+  console.log(`DEMO_PASSWORD_HASH='${hash}'`)
+  console.log("\n--- For Vercel environment variables (paste the value below as-is) ---")
+  console.log(hash)
+  console.log("")
 })
