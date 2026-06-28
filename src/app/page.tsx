@@ -11,6 +11,8 @@ import { SalesCycleCard } from "@/components/dashboard/SalesCycleCard"
 import { StageWinRateCard } from "@/components/dashboard/StageWinRateCard"
 import { StageConversionCard } from "@/components/dashboard/StageConversionCard"
 import { CopilotPanel } from "@/components/copilot/CopilotPanel"
+import { AdminSettingsButton } from "@/components/admin/AdminSettingsModal"
+import { type AISettings, loadAISettings, getActiveKey } from "@/lib/admin/settings"
 
 function DemoBanner() {
   const { isDemo } = useDeals()
@@ -39,7 +41,15 @@ function CopilotErrorBanner({ message, onDismiss }: { message: string; onDismiss
   )
 }
 
-function Dashboard({ copilotError, onDismissCopilotError }: { copilotError: string | null; onDismissCopilotError: () => void }) {
+function Dashboard({
+  copilotError,
+  onDismissCopilotError,
+  onSettingsChange,
+}: {
+  copilotError: string | null
+  onDismissCopilotError: () => void
+  onSettingsChange: (s: AISettings) => void
+}) {
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white border-b border-gray-200 px-6 py-4">
@@ -50,6 +60,7 @@ function Dashboard({ copilotError, onDismissCopilotError }: { copilotError: stri
           </div>
           <div className="flex items-center gap-4">
             <FileUpload />
+            <AdminSettingsButton onSettingsChange={onSettingsChange} />
             <button onClick={handleLogout} className="text-sm text-gray-500 hover:text-gray-700">
               Sign out
             </button>
@@ -75,6 +86,7 @@ function Dashboard({ copilotError, onDismissCopilotError }: { copilotError: stri
 
 export default function Home() {
   const [copilotError, setCopilotError] = useState<string | null>(null)
+  const [aiSettings, setAISettings] = useState<AISettings>(loadAISettings)
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function handleCopilotError(errorEvent: any) {
@@ -82,9 +94,9 @@ export default function Home() {
     const msg: string = errorEvent.error?.message ?? ""
 
     if (status === 402 || /credit|balance|quota/i.test(msg)) {
-      setCopilotError("Your Anthropic account has insufficient credits. Top up at console.anthropic.com to continue using the AI assistant.")
+      setCopilotError("Insufficient credits. Top up your API account or enter a different key in AI settings (⚙).")
     } else if (status === 401 || status === 403) {
-      setCopilotError("Anthropic API key is invalid or missing. Check the ANTHROPIC_API_KEY environment variable in Vercel.")
+      setCopilotError("API key is invalid or missing. Check your key in AI settings (⚙).")
     } else if (msg) {
       setCopilotError(`AI assistant error: ${msg}`)
     } else {
@@ -92,10 +104,19 @@ export default function Home() {
     }
   }
 
+  const activeKey = getActiveKey(aiSettings)
+  const copilotHeaders = activeKey
+    ? { "x-user-api-key": activeKey, "x-user-provider": aiSettings.provider }
+    : undefined
+
   return (
-    <CopilotKit runtimeUrl="/api/copilotkit" onError={handleCopilotError}>
+    <CopilotKit runtimeUrl="/api/copilotkit" headers={copilotHeaders} onError={handleCopilotError}>
       <DealsProvider>
-        <Dashboard copilotError={copilotError} onDismissCopilotError={() => setCopilotError(null)} />
+        <Dashboard
+          copilotError={copilotError}
+          onDismissCopilotError={() => setCopilotError(null)}
+          onSettingsChange={(s) => { setAISettings(s); setCopilotError(null) }}
+        />
       </DealsProvider>
     </CopilotKit>
   )
