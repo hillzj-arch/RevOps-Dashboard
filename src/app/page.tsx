@@ -59,7 +59,7 @@ function Dashboard({
             <h1 className="text-xl font-bold text-gray-900">RevOps Intelligence</h1>
             <p className="text-xs text-gray-500 mt-0.5">12-month pipeline analysis</p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 pr-14">
             <FileUpload />
             <AdminSettingsButton onSettingsChange={onSettingsChange} />
           </div>
