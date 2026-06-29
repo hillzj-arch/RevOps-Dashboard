@@ -11,6 +11,7 @@ import { SalesCycleCard } from "@/components/dashboard/SalesCycleCard"
 import { StageWinRateCard } from "@/components/dashboard/StageWinRateCard"
 import { StageConversionCard } from "@/components/dashboard/StageConversionCard"
 import { RepRevenueCard } from "@/components/dashboard/RepRevenueCard"
+import { ClosedLostReasonsCard } from "@/components/dashboard/ClosedLostReasonsCard"
 import { CopilotPanel } from "@/components/copilot/CopilotPanel"
 import { AdminSettingsButton } from "@/components/admin/AdminSettingsModal"
 import { TimeFilterBar } from "@/components/dashboard/TimeFilterBar"
@@ -75,6 +76,7 @@ function Dashboard({
           <StageWinRateCard />
           <StageConversionCard />
           <RepRevenueCard />
+          <ClosedLostReasonsCard />
         </div>
         <CopilotPanel hasKey={hasKey} onSettingsChange={onSettingsChange} />
       </main>

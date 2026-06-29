@@ -4,6 +4,7 @@ export interface Deal {
   region: string
   dealStage: string
   closeDate: Date | null
+  closeLostReason: string
   leadSource: string
   leadSourceDetail: string
   latestTrafficSource: string
