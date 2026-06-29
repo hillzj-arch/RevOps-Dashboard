@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import { createPortal } from "react-dom"
 import ExcelJS from "exceljs"
 
 const REQUIRED_COLUMNS = [
@@ -85,7 +86,7 @@ export function UploadGuideModal({ onClose }: { onClose: () => void }) {
     try { await downloadTemplate() } finally { setDownloading(false) }
   }
 
-  return (
+  return createPortal(
     <div
       ref={overlayRef}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-8"
@@ -158,6 +159,7 @@ export function UploadGuideModal({ onClose }: { onClose: () => void }) {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
