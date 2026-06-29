@@ -27,15 +27,15 @@ const OPTIONAL_COLUMNS = [
   { header: "Proposal", example: "5" },
   { header: "Procurement", example: "3" },
   { header: "# of Employees", example: "500" },
-  { header: "Open Source?", example: "No" },
+  { header: "Close Lost Reason", example: "Budget" },
 ]
 
 const ALL_HEADERS = [...REQUIRED_COLUMNS, ...OPTIONAL_COLUMNS].map((c) => c.header)
 
 const SAMPLE_ROWS = [
-  ["Acme Corp - New Deal", "Closed Won", "2025-03-15", 50000, "Jane Smith", "US/CAN", "United States", "New Business", "Website", "", "Organic Search", "Q1", 45, 5, 10, 15, 20, 5, 3, 500, "No"],
-  ["Beta Inc - Expansion", "Closed Lost", "2025-04-02", 25000, "John Doe", "EMEA", "Germany", "Expansion", "Event", "", "Direct Traffic", "Q2", 30, 3, 8, 10, 9, 0, 0, 1200, "Yes"],
-  ["Gamma LLC - New Deal", "Demo", "2025-06-30", 75000, "Jane Smith", "APAC", "Japan", "New Business", "Website", "", "Paid Search", "Q2", 0, 7, 12, 0, 0, 0, 0, 3000, "No"],
+  ["Acme Corp - New Deal", "Closed Won", "2025-03-15", 50000, "Jane Smith", "US/CAN", "United States", "New Business", "Website", "", "Organic Search", "Q1", 45, 5, 10, 15, 20, 5, 3, 500, ""],
+  ["Beta Inc - Expansion", "Closed Lost", "2025-04-02", 25000, "John Doe", "EMEA", "Germany", "Expansion", "Event", "", "Direct Traffic", "Q2", 30, 3, 8, 10, 9, 0, 0, 1200, "Budget"],
+  ["Gamma LLC - New Deal", "Demo", "2025-06-30", 75000, "Jane Smith", "APAC", "Japan", "New Business", "Website", "", "Paid Search", "Q2", 0, 7, 12, 0, 0, 0, 0, 3000, ""],
 ]
 
 async function downloadTemplate() {
