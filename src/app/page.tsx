@@ -12,6 +12,7 @@ import { StageWinRateCard } from "@/components/dashboard/StageWinRateCard"
 import { StageConversionCard } from "@/components/dashboard/StageConversionCard"
 import { CopilotPanel } from "@/components/copilot/CopilotPanel"
 import { AdminSettingsButton } from "@/components/admin/AdminSettingsModal"
+import { TimeFilterBar } from "@/components/dashboard/TimeFilterBar"
 import { type AISettings, loadAISettings, getActiveKey } from "@/lib/admin/settings"
 
 function DemoBanner() {
@@ -64,6 +65,7 @@ function Dashboard({
       <main className="max-w-7xl mx-auto px-6 py-6 space-y-4">
         <DemoBanner />
         {copilotError && <CopilotErrorBanner message={copilotError} onDismiss={onDismissCopilotError} />}
+        <TimeFilterBar />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <WinRateCard />
           <PipelineCard />

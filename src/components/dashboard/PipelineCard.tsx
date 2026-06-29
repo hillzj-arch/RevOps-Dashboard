@@ -9,8 +9,8 @@ const fmt = (n: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", notation: "compact", maximumFractionDigits: 1 }).format(n)
 
 export function PipelineCard() {
-  const { deals } = useDeals()
-  const result = calcPipeline(deals)
+  const { allDeals } = useDeals()
+  const result = calcPipeline(allDeals)
 
   const openStages = result.stages.filter((s) => s.stage !== "Closed Won" && s.stage !== "Closed Lost")
   const openDealCount = openStages.reduce((sum, s) => sum + s.count, 0)

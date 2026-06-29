@@ -1,34 +1,43 @@
 "use client"
 
-import { createContext, useContext, useState, ReactNode } from "react"
+import { createContext, useContext, useState, useMemo, ReactNode } from "react"
 import { Deal } from "./schema"
 import { DEMO_DEALS } from "./demo-data"
+import { TimeFilter, DEFAULT_TIME_FILTER, applyTimeFilter } from "./time-filter"
 
 interface DealsContextValue {
-  deals: Deal[]
+  deals: Deal[]        // filtered — used by all tiles except pipeline waterfall
+  allDeals: Deal[]     // unfiltered — used by pipeline waterfall only
   setDeals: (deals: Deal[]) => void
   isDemo: boolean
   resetToDemo: () => void
+  timeFilter: TimeFilter
+  setTimeFilter: (f: TimeFilter) => void
 }
 
 const DealsContext = createContext<DealsContextValue | null>(null)
 
 export function DealsProvider({ children }: { children: ReactNode }) {
-  const [deals, setDealsState] = useState<Deal[]>(DEMO_DEALS)
+  const [rawDeals, setRawDeals] = useState<Deal[]>(DEMO_DEALS)
   const [isDemo, setIsDemo] = useState(true)
+  const [timeFilter, setTimeFilter] = useState<TimeFilter>(DEFAULT_TIME_FILTER)
 
   function setDeals(newDeals: Deal[]) {
-    setDealsState(newDeals)
+    setRawDeals(newDeals)
     setIsDemo(false)
+    setTimeFilter(DEFAULT_TIME_FILTER)
   }
 
   function resetToDemo() {
-    setDealsState(DEMO_DEALS)
+    setRawDeals(DEMO_DEALS)
     setIsDemo(true)
+    setTimeFilter(DEFAULT_TIME_FILTER)
   }
 
+  const deals = useMemo(() => applyTimeFilter(rawDeals, timeFilter), [rawDeals, timeFilter])
+
   return (
-    <DealsContext.Provider value={{ deals, setDeals, isDemo, resetToDemo }}>
+    <DealsContext.Provider value={{ deals, allDeals: rawDeals, setDeals, isDemo, resetToDemo, timeFilter, setTimeFilter }}>
       {children}
     </DealsContext.Provider>
   )
