@@ -24,11 +24,6 @@ function DemoBanner() {
   )
 }
 
-async function handleLogout() {
-  await fetch("/api/auth/logout", { method: "POST" })
-  window.location.href = "/login"
-}
-
 function CopilotErrorBanner({ message, onDismiss }: { message: string; onDismiss: () => void }) {
   return (
     <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 flex items-start gap-3 text-sm text-red-800">
@@ -45,10 +40,12 @@ function Dashboard({
   copilotError,
   onDismissCopilotError,
   onSettingsChange,
+  hasKey,
 }: {
   copilotError: string | null
   onDismissCopilotError: () => void
   onSettingsChange: (s: AISettings) => void
+  hasKey: boolean
 }) {
   return (
     <div className="min-h-screen bg-gray-50">
@@ -61,9 +58,6 @@ function Dashboard({
           <div className="flex items-center gap-4">
             <FileUpload />
             <AdminSettingsButton onSettingsChange={onSettingsChange} />
-            <button onClick={handleLogout} className="text-sm text-gray-500 hover:text-gray-700">
-              Sign out
-            </button>
           </div>
         </div>
       </header>
@@ -78,7 +72,7 @@ function Dashboard({
           <StageWinRateCard />
           <StageConversionCard />
         </div>
-        <CopilotPanel />
+        <CopilotPanel hasKey={hasKey} onSettingsChange={onSettingsChange} />
       </main>
     </div>
   )
@@ -116,6 +110,7 @@ export default function Home() {
           copilotError={copilotError}
           onDismissCopilotError={() => setCopilotError(null)}
           onSettingsChange={(s) => { setAISettings(s); setCopilotError(null) }}
+          hasKey={!!activeKey}
         />
       </DealsProvider>
     </CopilotKit>

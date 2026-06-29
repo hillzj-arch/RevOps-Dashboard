@@ -13,6 +13,8 @@ import { BarChart } from "@/components/charts/BarChart"
 import { LineChart } from "@/components/charts/LineChart"
 import { FunnelChart } from "@/components/charts/FunnelChart"
 import { DataTable } from "@/components/charts/DataTable"
+import { AdminSettingsButton } from "@/components/admin/AdminSettingsModal"
+import { type AISettings } from "@/lib/admin/settings"
 
 interface GeneratedChart {
   id: string
@@ -22,7 +24,7 @@ interface GeneratedChart {
   props: Record<string, any>
 }
 
-export function CopilotPanel() {
+export function CopilotPanel({ hasKey, onSettingsChange }: { hasKey: boolean; onSettingsChange: (s: AISettings) => void }) {
   const { deals } = useDeals()
   const [generatedCharts, setGeneratedCharts] = useState<GeneratedChart[]>([])
 
@@ -132,10 +134,28 @@ export function CopilotPanel() {
           </div>
         </div>
       )}
-      <CopilotPopup
-        instructions="You are a RevOps analyst assistant. You have access to the current deals dataset. Use renderBarChart, renderLineChart, renderFunnelChart, or renderTable to create visualizations when the user asks for charts or analysis. Always ground your answers in the actual data provided. Be concise and specific."
-        labels={{ title: "RevOps Assistant", initial: "Ask me anything about your pipeline, win rates, or sales cycle — or ask me to build a chart." }}
-      />
+      {hasKey ? (
+        <CopilotPopup
+          instructions="You are a RevOps analyst assistant. You have access to the current deals dataset. Use renderBarChart, renderLineChart, renderFunnelChart, or renderTable to create visualizations when the user asks for charts or analysis. Always ground your answers in the actual data provided. Be concise and specific."
+          labels={{ title: "RevOps Assistant", initial: "Ask me anything about your pipeline, win rates, or sales cycle — or ask me to build a chart." }}
+        />
+      ) : (
+        <div className="bg-white border border-dashed border-gray-300 rounded-2xl px-8 py-10 flex flex-col items-center text-center gap-4">
+          <div className="w-12 h-12 rounded-full bg-indigo-50 flex items-center justify-center">
+            <svg className="w-6 h-6 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+            </svg>
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-gray-800">Connect your AI assistant</h3>
+            <p className="text-sm text-gray-500 mt-1 max-w-sm">
+              Add your Anthropic or OpenAI API key to enable AI-powered pipeline analysis and chart generation. Your key stays in your browser only.
+            </p>
+          </div>
+          <AdminSettingsButton onSettingsChange={onSettingsChange} />
+          <p className="text-xs text-gray-400">Click the settings icon above, or use the ⚙ icon in the header</p>
+        </div>
+      )}
     </>
   )
 }
