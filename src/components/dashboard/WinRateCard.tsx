@@ -18,7 +18,7 @@ export function WinRateCard() {
           <p className="text-xs text-gray-500 mt-0.5">Closed deals only</p>
         </div>
         <div className="text-right">
-          <span className="text-4xl font-bold text-[var(--p-600)]">{result.winRate}%</span>
+          <span className="text-4xl font-bold text-gray-900">{result.winRate}%</span>
           <p className="text-xs text-gray-500 mt-1">{result.won}W / {result.lost}L / {result.open} open</p>
         </div>
       </div>

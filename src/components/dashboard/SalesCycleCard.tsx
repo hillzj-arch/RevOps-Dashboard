@@ -16,7 +16,7 @@ export function SalesCycleCard() {
       <div className="flex items-start justify-between">
         <h2 className="text-base font-semibold text-gray-900">Sales Cycle</h2>
         <div className="text-right">
-          <span className="text-4xl font-bold text-[var(--p-600)]">{result.avgTotalDays}d</span>
+          <span className="text-4xl font-bold text-gray-900">{result.avgTotalDays}d</span>
           <p className="text-xs text-gray-500 mt-1">avg · {result.medianTotalDays}d median</p>
         </div>
       </div>
