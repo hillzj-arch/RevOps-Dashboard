@@ -57,7 +57,7 @@ export function ClosedLostReasonsCard() {
         <select
           value={region}
           onChange={(e) => handleRegionChange(e.target.value)}
-          className="text-xs border border-gray-200 rounded-lg px-2.5 py-1.5 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="text-xs border border-gray-200 rounded-lg px-2.5 py-1.5 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-[var(--p)]"
         >
           <option value="">All regions</option>
           {regions.map((r) => (
@@ -68,7 +68,7 @@ export function ClosedLostReasonsCard() {
         <select
           value={rep}
           onChange={(e) => setRep(e.target.value)}
-          className="text-xs border border-gray-200 rounded-lg px-2.5 py-1.5 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="text-xs border border-gray-200 rounded-lg px-2.5 py-1.5 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-[var(--p)]"
         >
           <option value="">All reps</option>
           {reps.map((r) => (

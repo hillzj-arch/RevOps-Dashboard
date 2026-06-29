@@ -10,6 +10,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts"
+import { useTheme } from "@/lib/theme-context"
 
 interface LineChartProps {
   data: Record<string, string | number>[]
@@ -20,9 +21,12 @@ interface LineChartProps {
   height?: number
 }
 
-const COLORS = ["#6366f1", "#10b981", "#f59e0b", "#ef4444", "#3b82f6"]
+const STATIC_COLORS = ["#10b981", "#f59e0b", "#ef4444", "#3b82f6"]
 
 export function LineChart({ data, xKey, lines, title, formatValue, height = 320 }: LineChartProps) {
+  const { primaryColor } = useTheme()
+  const COLORS = [primaryColor, ...STATIC_COLORS]
+
   return (
     <div className="w-full">
       {title && <h3 className="text-sm font-semibold text-gray-700 mb-3">{title}</h3>}

@@ -9,6 +9,8 @@ import {
   clearAISettings,
   getActiveKey,
 } from "@/lib/admin/settings"
+import { useTheme } from "@/lib/theme-context"
+import { PRESET_COLORS } from "@/lib/theme"
 
 interface Props {
   onSettingsChange: (settings: AISettings) => void
@@ -45,6 +47,8 @@ function AdminSettingsModal({
   const [showKey, setShowKey] = useState(false)
   const [saved, setSaved] = useState(false)
   const overlayRef = useRef<HTMLDivElement>(null)
+  const { primaryColor, setPrimaryColor } = useTheme()
+  const [customHex, setCustomHex] = useState(primaryColor)
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -86,6 +90,19 @@ function AdminSettingsModal({
     setSaved(false)
   }
 
+  function handleColorSelect(hex: string) {
+    setCustomHex(hex)
+    setPrimaryColor(hex)
+  }
+
+  function handleCustomHex(e: React.ChangeEvent<HTMLInputElement>) {
+    const val = e.target.value
+    setCustomHex(val)
+    if (/^#[0-9a-fA-F]{6}$/.test(val)) {
+      setPrimaryColor(val)
+    }
+  }
+
   return (
     <div
       ref={overlayRef}
@@ -94,13 +111,43 @@ function AdminSettingsModal({
     >
       <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 space-y-5">
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-semibold text-gray-900">AI Assistant Settings</h2>
+          <h2 className="text-base font-semibold text-gray-900">Settings</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl leading-none">&times;</button>
         </div>
 
+        {/* Appearance */}
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-gray-700">Accent color</label>
+          <div className="flex items-center gap-2 flex-wrap">
+            {PRESET_COLORS.map((preset) => (
+              <button
+                key={preset.value}
+                title={preset.label}
+                onClick={() => handleColorSelect(preset.value)}
+                className="w-7 h-7 rounded-full border-2 transition-transform hover:scale-110 focus:outline-none"
+                style={{
+                  backgroundColor: preset.value,
+                  borderColor: primaryColor === preset.value ? "#111" : "transparent",
+                  boxShadow: primaryColor === preset.value ? "0 0 0 1px #fff inset" : "none",
+                }}
+              />
+            ))}
+            <input
+              type="text"
+              value={customHex}
+              onChange={handleCustomHex}
+              placeholder="#6366f1"
+              maxLength={7}
+              className="w-24 px-2 py-1 text-xs font-mono border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--p)]"
+            />
+          </div>
+        </div>
+
+        <div className="border-t border-gray-100" />
+
         {/* Provider selection */}
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700">Provider</label>
+          <label className="block text-sm font-medium text-gray-700">AI provider</label>
           <div className="grid grid-cols-2 gap-2">
             {([
               { id: "anthropic" as AIProvider, label: "Anthropic", sub: "Claude" },
@@ -111,14 +158,14 @@ function AdminSettingsModal({
                 onClick={() => setProvider(id)}
                 className={`flex flex-col items-start px-4 py-3 rounded-xl border-2 text-left transition-colors ${
                   settings.provider === id
-                    ? "border-indigo-500 bg-indigo-50"
+                    ? "border-[var(--p)] bg-[var(--p-50)]"
                     : "border-gray-200 hover:border-gray-300"
                 }`}
               >
-                <span className={`text-sm font-medium ${settings.provider === id ? "text-indigo-700" : "text-gray-800"}`}>
+                <span className={`text-sm font-medium ${settings.provider === id ? "text-[var(--p-700)]" : "text-gray-800"}`}>
                   {label}
                 </span>
-                <span className={`text-xs mt-0.5 ${settings.provider === id ? "text-indigo-500" : "text-gray-400"}`}>
+                <span className={`text-xs mt-0.5 ${settings.provider === id ? "text-[var(--p)]" : "text-gray-400"}`}>
                   {sub}
                 </span>
               </button>
@@ -135,7 +182,7 @@ function AdminSettingsModal({
               value={activeKey}
               onChange={(e) => setKey(e.target.value)}
               placeholder={keyPlaceholder}
-              className="w-full px-3.5 py-2.5 pr-20 rounded-lg border border-gray-300 text-sm text-gray-900 font-mono placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full px-3.5 py-2.5 pr-20 rounded-lg border border-gray-300 text-sm text-gray-900 font-mono placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--p)] focus:border-transparent"
               autoComplete="off"
               spellCheck={false}
             />
@@ -190,7 +237,7 @@ function AdminSettingsModal({
             )}
             <button
               onClick={handleSave}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+              className="bg-[var(--p-600)] hover:bg-[var(--p-700)] text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
             >
               Save settings
             </button>

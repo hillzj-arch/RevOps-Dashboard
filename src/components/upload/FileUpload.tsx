@@ -50,7 +50,7 @@ export function FileUpload() {
           onDrop={handleDrop}
           onDragOver={(e) => e.preventDefault()}
           onClick={() => inputRef.current?.click()}
-          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg cursor-pointer transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-[var(--p-600)] hover:bg-[var(--p-700)] text-white text-sm font-medium rounded-lg cursor-pointer transition-colors"
         >
           {status === "loading" ? (
             <span>Importing…</span>

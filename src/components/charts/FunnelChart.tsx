@@ -1,5 +1,7 @@
 "use client"
 
+import { useTheme } from "@/lib/theme-context"
+
 interface FunnelChartProps {
   data: { name: string; value: number; sublabel?: string; fill?: string }[]
   title?: string
@@ -7,10 +9,9 @@ interface FunnelChartProps {
   height?: number
 }
 
-const DEFAULT_COLOR = "#6366f1"
-
 export function FunnelChart({ data, title, formatValue, height = 320 }: FunnelChartProps) {
-  const colored = data.map((d) => ({ ...d, fill: d.fill ?? DEFAULT_COLOR }))
+  const { primaryColor } = useTheme()
+  const colored = data.map((d) => ({ ...d, fill: d.fill ?? primaryColor }))
   const maxValue = Math.max(...colored.map((d) => d.value), 1)
   const n = colored.length
   const barH = n > 0 ? Math.max(Math.floor((height - 4 * (n - 1)) / n), 8) : 8

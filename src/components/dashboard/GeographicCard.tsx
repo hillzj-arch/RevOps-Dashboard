@@ -4,12 +4,14 @@ import { useDeals } from "@/lib/data/deals-context"
 import { calcGeographic } from "@/lib/calculations/geographic"
 import { BarChart } from "@/components/charts/BarChart"
 import { DataTable } from "@/components/charts/DataTable"
+import { useTheme } from "@/lib/theme-context"
 
 const fmt = (n: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", notation: "compact" }).format(n)
 
 export function GeographicCard() {
   const { deals } = useDeals()
+  const { primaryColor } = useTheme()
   const result = calcGeographic(deals)
 
   return (
@@ -18,7 +20,7 @@ export function GeographicCard() {
       <BarChart
         data={result.byRegion.map((r) => ({ region: r.region, Deals: r.count }))}
         xKey="region"
-        bars={[{ key: "Deals", color: "#6366f1" }]}
+        bars={[{ key: "Deals", color: primaryColor }]}
         title="Deals by region"
         height={200}
       />

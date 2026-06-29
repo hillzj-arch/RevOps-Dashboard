@@ -23,7 +23,7 @@ export function StageWinRateCard() {
           <h2 className="text-base font-semibold text-gray-900">Win Rate by Stage</h2>
           <p className="text-xs text-gray-500 mt-0.5">Closed Won deals that passed through each stage</p>
         </div>
-        <span className="text-4xl font-bold text-indigo-600">{totalWon}</span>
+        <span className="text-4xl font-bold text-[var(--p-600)]">{totalWon}</span>
       </div>
       <FunnelChart data={funnelData} formatValue={(v) => `${v}%`} height={280} />
     </div>

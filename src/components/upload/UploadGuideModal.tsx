@@ -107,7 +107,7 @@ export function UploadGuideModal({ onClose }: { onClose: () => void }) {
           <div>
             <div className="flex items-center gap-2 mb-3">
               <span className="text-xs font-semibold uppercase tracking-wide text-gray-500">Required columns</span>
-              <span className="px-1.5 py-0.5 rounded text-xs bg-indigo-100 text-indigo-700 font-medium">{REQUIRED_COLUMNS.length}</span>
+              <span className="px-1.5 py-0.5 rounded text-xs bg-[var(--p-100)] text-[var(--p-700)] font-medium">{REQUIRED_COLUMNS.length}</span>
             </div>
             <div className="space-y-2">
               {REQUIRED_COLUMNS.map((col) => (
@@ -149,7 +149,7 @@ export function UploadGuideModal({ onClose }: { onClose: () => void }) {
           <button
             onClick={handleDownload}
             disabled={downloading}
-            className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+            className="flex items-center gap-2 bg-[var(--p-600)] hover:bg-[var(--p-700)] disabled:opacity-60 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />

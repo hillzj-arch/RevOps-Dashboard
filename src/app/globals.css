@@ -3,6 +3,14 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  --p: #6366f1;
+  --p-50:  color-mix(in srgb, var(--p) 10%, white);
+  --p-100: color-mix(in srgb, var(--p) 20%, white);
+  --p-200: color-mix(in srgb, var(--p) 35%, white);
+  --p-400: color-mix(in srgb, var(--p) 65%, white);
+  --p-600: color-mix(in srgb, var(--p) 85%, black);
+  --p-700: color-mix(in srgb, var(--p) 70%, black);
 }
 
 @theme inline {

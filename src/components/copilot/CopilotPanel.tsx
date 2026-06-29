@@ -123,7 +123,7 @@ export function CopilotPanel({ hasKey, onSettingsChange }: { hasKey: boolean; on
           <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">AI-Generated Views</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {generatedCharts.map((chart) => (
-              <div key={chart.id} className="bg-white rounded-2xl border border-indigo-100 p-6 relative">
+              <div key={chart.id} className="bg-white rounded-2xl border border-[var(--p-100)] p-6 relative">
                 <button onClick={() => setGeneratedCharts((prev) => prev.filter((c) => c.id !== chart.id))} className="absolute top-4 right-4 text-gray-300 hover:text-gray-500 text-lg leading-none" title="Remove">×</button>
                 {chart.type === "bar" && <BarChart title={chart.title} data={chart.props.data} xKey={chart.props.xKey} bars={[{ key: chart.props.valueKey }]} formatValue={chart.props.formatAsCurrency ? fmtCurrency : chart.props.formatAsPercent ? (v) => `${v}%` : undefined} />}
                 {chart.type === "line" && <LineChart title={chart.title} data={chart.props.data} xKey={chart.props.xKey} lines={[{ key: chart.props.valueKey }]} />}
@@ -141,8 +141,8 @@ export function CopilotPanel({ hasKey, onSettingsChange }: { hasKey: boolean; on
         />
       ) : (
         <div className="bg-white border border-dashed border-gray-300 rounded-2xl px-8 py-10 flex flex-col items-center text-center gap-4">
-          <div className="w-12 h-12 rounded-full bg-indigo-50 flex items-center justify-center">
-            <svg className="w-6 h-6 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <div className="w-12 h-12 rounded-full bg-[var(--p-50)] flex items-center justify-center">
+            <svg className="w-6 h-6 text-[var(--p-400)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
             </svg>
           </div>

@@ -2,14 +2,14 @@
 
 import { useDeals } from "@/lib/data/deals-context"
 import { calcRepRevenue } from "@/lib/calculations/rep-revenue"
+import { useTheme } from "@/lib/theme-context"
 
 const fmtCurrency = (n: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", notation: "compact", maximumFractionDigits: 1 }).format(n)
 
-const BAR_COLOR = "#6366f1"
-
 export function RepRevenueCard() {
   const { deals } = useDeals()
+  const { primaryColor } = useTheme()
   const { rows, totalRevenue, totalDeals } = calcRepRevenue(deals)
 
   const maxRevenue = rows[0]?.revenue ?? 1
@@ -22,7 +22,7 @@ export function RepRevenueCard() {
           <p className="text-xs text-gray-500 mt-0.5">Closed won deals only</p>
         </div>
         <div className="text-right">
-          <span className="text-3xl font-bold text-indigo-600">{fmtCurrency(totalRevenue)}</span>
+          <span className="text-3xl font-bold text-[var(--p-600)]">{fmtCurrency(totalRevenue)}</span>
           <p className="text-xs text-gray-500 mt-1">{totalDeals} closed won deals</p>
         </div>
       </div>
@@ -45,7 +45,7 @@ export function RepRevenueCard() {
               <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all duration-500"
-                  style={{ width: `${pct}%`, backgroundColor: BAR_COLOR }}
+                  style={{ width: `${pct}%`, backgroundColor: primaryColor }}
                 />
               </div>
             </div>

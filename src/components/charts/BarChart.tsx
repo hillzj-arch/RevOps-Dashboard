@@ -11,6 +11,7 @@ import {
   LabelList,
   ResponsiveContainer,
 } from "recharts"
+import { useTheme } from "@/lib/theme-context"
 
 interface BarChartProps {
   data: Record<string, string | number>[]
@@ -22,9 +23,12 @@ interface BarChartProps {
   height?: number
 }
 
-const COLORS = ["#6366f1", "#10b981", "#f59e0b", "#ef4444", "#3b82f6", "#8b5cf6"]
+const STATIC_COLORS = ["#10b981", "#f59e0b", "#ef4444", "#3b82f6", "#8b5cf6"]
 
 export function BarChart({ data, xKey, bars, title, formatValue, showLabels, height = 320 }: BarChartProps) {
+  const { primaryColor } = useTheme()
+  const COLORS = [primaryColor, ...STATIC_COLORS]
+
   return (
     <div className="w-full">
       {title && <h3 className="text-sm font-semibold text-gray-700 mb-3">{title}</h3>}

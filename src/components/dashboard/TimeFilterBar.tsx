@@ -86,7 +86,7 @@ export function TimeFilterBar() {
         <select
           value={currentValue()}
           onChange={(e) => selectPeriod(e.target.value)}
-          className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-[var(--p)]"
         >
           {options.map((opt) => (
             <option key={opt.value} value={opt.value}>

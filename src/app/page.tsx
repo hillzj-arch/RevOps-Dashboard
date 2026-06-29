@@ -16,12 +16,13 @@ import { CopilotPanel } from "@/components/copilot/CopilotPanel"
 import { AdminSettingsButton } from "@/components/admin/AdminSettingsModal"
 import { TimeFilterBar } from "@/components/dashboard/TimeFilterBar"
 import { type AISettings, loadAISettings, getActiveKey } from "@/lib/admin/settings"
+import { ThemeProvider } from "@/lib/theme-context"
 
 function DemoBanner() {
   const { isDemo } = useDeals()
   if (!isDemo) return null
   return (
-    <div className="bg-indigo-50 border border-indigo-200 rounded-lg px-4 py-2.5 text-sm text-indigo-700">
+    <div className="bg-[var(--p-50)] border border-[var(--p-200)] rounded-lg px-4 py-2.5 text-sm text-[var(--p-700)]">
       Viewing <strong>demo data</strong> — upload your own spreadsheet to analyze your pipeline.
     </div>
   )
@@ -110,6 +111,7 @@ export default function Home() {
     : undefined
 
   return (
+    <ThemeProvider>
     <CopilotKit runtimeUrl="/api/copilotkit" headers={copilotHeaders} onError={handleCopilotError}>
       <DealsProvider>
         <Dashboard
@@ -120,5 +122,6 @@ export default function Home() {
         />
       </DealsProvider>
     </CopilotKit>
+    </ThemeProvider>
   )
 }
