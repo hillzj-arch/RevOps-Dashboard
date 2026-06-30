@@ -9,6 +9,14 @@ import OpenAI from "openai"
 
 const runtime = new CopilotRuntime()
 
+// CopilotKit passes system messages in the messages array (a known pattern in its internals).
+// The AI SDK emits a console.warn about this on every request. Suppress it.
+const _warn = console.warn.bind(console)
+console.warn = (...args: unknown[]) => {
+  if (typeof args[0] === "string" && args[0].includes("allowSystemInMessages")) return
+  _warn(...args)
+}
+
 export async function POST(req: Request): Promise<Response> {
   const userKey = req.headers.get("x-user-api-key") ?? ""
   const provider = req.headers.get("x-user-provider") ?? "anthropic"
