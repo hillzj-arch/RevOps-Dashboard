@@ -30,5 +30,18 @@ export async function POST(req: Request): Promise<Response> {
     serviceAdapter,
     endpoint: "/api/copilotkit",
   })
-  return handleRequest(req)
+
+  try {
+    return await handleRequest(req)
+  } catch (err: unknown) {
+    const e = err as Record<string, unknown>
+    const status =
+      (e?.status as number) ??
+      (e?.statusCode as number) ??
+      ((e?.response as Record<string, unknown>)?.status as number) ??
+      500
+    const message = (e?.message as string) ?? "Unknown error"
+    console.error("[copilotkit] provider error:", status, message)
+    return Response.json({ error: message }, { status: typeof status === "number" ? status : 500 })
+  }
 }

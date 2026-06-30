@@ -101,13 +101,24 @@ export default function Home() {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function handleCopilotError(errorEvent: any) {
-    const status = errorEvent.context?.response?.status
-    const msg: string = errorEvent.error?.message ?? ""
+    // The outer HTTP connection is usually 200 (streaming), so check both
+    // context.response.status (if the runtime returned a real HTTP error)
+    // AND error.statusCode (where the provider's 402/401 surfaces after being
+    // wrapped by CopilotKit's convertServiceAdapterError).
+    const httpStatus = errorEvent.context?.response?.status
+    const providerStatus = errorEvent.error?.statusCode ?? errorEvent.error?.status
+    const status = httpStatus || providerStatus
+    const msg: string =
+      errorEvent.error?.message ??
+      errorEvent.context?.response?.body?.error ??
+      ""
 
-    if (status === 402 || /credit|balance|quota/i.test(msg)) {
+    if (status === 402 || /credit|balance|quota|insufficient/i.test(msg)) {
       setCopilotError("Insufficient credits. Top up your API account or enter a different key in AI settings (⚙).")
-    } else if (status === 401 || status === 403) {
+    } else if (status === 401 || status === 403 || /invalid.*key|api key|unauthorized|forbidden/i.test(msg)) {
       setCopilotError("API key is invalid or missing. Check your key in AI settings (⚙).")
+    } else if (status === 429 || /rate.?limit|too many/i.test(msg)) {
+      setCopilotError("Rate limit hit. Wait a moment, then try again.")
     } else if (msg) {
       setCopilotError(`AI assistant error: ${msg}`)
     } else {
