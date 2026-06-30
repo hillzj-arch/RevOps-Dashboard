@@ -12,7 +12,10 @@ export function PipelineCard() {
   const { allDeals } = useDeals()
   const result = calcPipeline(allDeals)
 
-  const openStages = result.stages.filter((s) => s.stage !== "Closed Won" && s.stage !== "Closed Lost")
+  const openStages = result.stages.filter((s) => {
+    const lower = s.stage.toLowerCase()
+    return !lower.includes("won") && !lower.includes("lost")
+  })
   const openDealCount = openStages.reduce((sum, s) => sum + s.count, 0)
 
   const funnelData = openStages.map((s) => ({ name: s.stage, value: s.count, sublabel: fmt(s.amount) }))
@@ -29,7 +32,7 @@ export function PipelineCard() {
       </div>
       <FunnelChart data={funnelData} title="Deals by stage" height={280} />
       <DataTable
-        data={result.stages.map((s) => ({ stage: s.stage, count: s.count, amount: s.amount }))}
+        data={openStages.map((s) => ({ stage: s.stage, count: s.count, amount: s.amount }))}
         columns={[
           { key: "stage", label: "Stage" },
           { key: "count", label: "Deals", align: "right" },

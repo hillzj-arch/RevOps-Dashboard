@@ -79,8 +79,8 @@ export function calcPipeline(deals: Deal[]): PipelineResult {
 
   const openDeals = deals.filter(
     (d) =>
-      !d.dealStage.toLowerCase().includes("closed won") &&
-      !d.dealStage.toLowerCase().includes("closed lost")
+      !d.dealStage.toLowerCase().includes("won") &&
+      !d.dealStage.toLowerCase().includes("lost")
   )
 
   const totalPipelineValue = openDeals.reduce((sum, d) => sum + d.amount, 0)

@@ -11,8 +11,8 @@ export function calcStageWinRates(deals: Deal[]): StageWinRateRow[] {
   return STAGE_ORDER.map((stage) => {
     const key = stage.toLowerCase() as keyof Deal
     const inStage = deals.filter((d) => Number(d[key]) > 0)
-    const won = inStage.filter((d) => d.dealStage === "Closed Won").length
-    const lost = inStage.filter((d) => d.dealStage === "Closed Lost").length
+    const won = inStage.filter((d) => d.dealStage.toLowerCase().includes("won")).length
+    const lost = inStage.filter((d) => d.dealStage.toLowerCase().includes("lost")).length
     const closed = won + lost
     return { stage, won, closed, winRate: closed > 0 ? Math.round((won / closed) * 100) : 0 }
   })
