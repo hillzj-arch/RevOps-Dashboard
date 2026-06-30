@@ -28,7 +28,7 @@ export function PipelineCard() {
       <div className="flex items-start justify-between">
         <h2 className="text-base font-semibold text-gray-900">Open Pipeline Waterfall</h2>
         <div className="text-right">
-          <p className="text-2xl font-bold text-gray-900">{fmt(result.totalPipelineValue)}</p>
+          <p className="text-4xl font-bold text-gray-900">{fmt(result.totalPipelineValue)}</p>
           <p className="text-xs text-gray-500 mt-0.5">{openDealCount} deals</p>
           <p className="text-xs text-gray-500">{fmt(result.weightedForecast)} weighted</p>
         </div>

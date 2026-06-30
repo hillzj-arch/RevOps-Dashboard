@@ -25,7 +25,7 @@ export function ClosedWonCard() {
           <p className="text-xs text-gray-500 mt-0.5">By region</p>
         </div>
         <div className="text-right">
-          <span className="text-3xl font-bold text-gray-900">{fmt(totalRevenue)}</span>
+          <span className="text-4xl font-bold text-gray-900">{fmt(totalRevenue)}</span>
           <p className="text-xs text-gray-500 mt-1">{totalDeals} deals closed won</p>
         </div>
       </div>

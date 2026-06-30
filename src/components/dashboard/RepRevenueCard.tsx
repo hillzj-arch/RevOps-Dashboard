@@ -25,7 +25,7 @@ export function RepRevenueCard() {
           <p className="text-xs text-gray-500 mt-0.5">Closed won deals only</p>
         </div>
         <div className="text-right">
-          <span className="text-3xl font-bold text-gray-900">{fmtCurrency(totalRevenue)}</span>
+          <span className="text-4xl font-bold text-gray-900">{fmtCurrency(totalRevenue)}</span>
           <p className="text-xs text-gray-500 mt-1">{totalDeals} closed won deals</p>
         </div>
       </div>
