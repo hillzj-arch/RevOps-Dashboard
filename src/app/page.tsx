@@ -22,7 +22,7 @@ function DemoBanner() {
   const { isDemo } = useDeals()
   if (!isDemo) return null
   return (
-    <div className="bg-[var(--p-50)] border border-[var(--p-200)] rounded-lg px-4 py-2.5 text-sm text-[var(--p-700)]">
+    <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-2.5 text-sm text-amber-800">
       Viewing <strong>demo data</strong> — upload your own spreadsheet to analyze your pipeline.
     </div>
   )
