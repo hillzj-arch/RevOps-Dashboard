@@ -15,7 +15,7 @@ export interface RepRevenueResult {
 }
 
 export function calcRepRevenue(deals: Deal[]): RepRevenueResult {
-  const wonDeals = deals.filter((d) => d.dealStage === "Closed Won")
+  const wonDeals = deals.filter((d) => d.dealStage.toLowerCase().includes("won"))
 
   const map: Record<string, { revenue: number; deals: number }> = {}
   for (const deal of wonDeals) {

@@ -23,7 +23,7 @@ function median(nums: number[]): number {
 }
 
 export function calcSalesCycle(deals: Deal[]): SalesCycleResult {
-  const wonDeals = deals.filter((d) => d.dealStage === "Closed Won")
+  const wonDeals = deals.filter((d) => d.dealStage.toLowerCase().includes("won"))
 
   const stageFields: { name: string; key: keyof Deal }[] = STAGE_ORDER.map((s) => ({
     name: s,
