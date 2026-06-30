@@ -13,6 +13,8 @@ import { StageConversionCard } from "@/components/dashboard/StageConversionCard"
 import { RepRevenueCard } from "@/components/dashboard/RepRevenueCard"
 import { ClosedLostReasonsCard } from "@/components/dashboard/ClosedLostReasonsCard"
 import { ClosedWonCard } from "@/components/dashboard/ClosedWonCard"
+import { WonTrendsCard } from "@/components/dashboard/WonTrendsCard"
+import { PipelineTrendsCard } from "@/components/dashboard/PipelineTrendsCard"
 import { CopilotPanel } from "@/components/copilot/CopilotPanel"
 import { AdminSettingsButton } from "@/components/admin/AdminSettingsModal"
 import { TimeFilterBar } from "@/components/dashboard/TimeFilterBar"
@@ -82,6 +84,10 @@ function Dashboard({
           <StageWinRateCard />
           <StageConversionCard />
           <ClosedLostReasonsCard />
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <WonTrendsCard />
+          <PipelineTrendsCard />
         </div>
         <CopilotPanel hasKey={hasKey} onSettingsChange={onSettingsChange} />
       </main>
