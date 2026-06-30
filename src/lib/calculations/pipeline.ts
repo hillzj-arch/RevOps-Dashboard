@@ -35,6 +35,16 @@ export interface PipelineResult {
   weightedForecast: number
 }
 
+const PIPELINE_STAGE_ORDER = [
+  "SAL",
+  "Discovery",
+  "Demonstration",
+  "Eval/PoC",
+  "POC Validation",
+  "Proposal",
+  "Procurement",
+]
+
 const STAGE_WEIGHTS: Record<string, number> = {
   SAL: 0.05,
   Discovery: 0.1,
@@ -56,11 +66,9 @@ export function calcPipeline(deals: Deal[]): PipelineResult {
   }
 
   const orderedStageNames = [
-    ...STAGE_ORDER,
-    "Closed Won",
-    "Closed Lost",
+    ...PIPELINE_STAGE_ORDER,
     ...Object.keys(stageMap).filter(
-      (s) => !([...STAGE_ORDER, "Closed Won", "Closed Lost"] as string[]).includes(s)
+      (s) => !PIPELINE_STAGE_ORDER.includes(s) && !s.toLowerCase().includes("won") && !s.toLowerCase().includes("lost")
     ),
   ].filter((s) => stageMap[s])
 
