@@ -132,7 +132,11 @@ export async function parseFile(file: File): Promise<Deal[]> {
         const obj: Record<string, string> = {}
         cells.forEach((v, i) => {
           if (!headers[i]) return
-          obj[headers[i]] = v instanceof Date ? v.toISOString().slice(0, 10) : String(v ?? "").trim()
+          obj[headers[i]] = v instanceof Date
+            ? v.toISOString().slice(0, 10)
+            : (v && typeof v === "object" && "result" in (v as object))
+              ? String((v as { result: unknown }).result ?? "").trim()
+              : String(v ?? "").trim()
         })
         rows.push(obj)
       }
