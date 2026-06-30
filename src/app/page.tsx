@@ -12,6 +12,7 @@ import { StageWinRateCard } from "@/components/dashboard/StageWinRateCard"
 import { StageConversionCard } from "@/components/dashboard/StageConversionCard"
 import { RepRevenueCard } from "@/components/dashboard/RepRevenueCard"
 import { ClosedLostReasonsCard } from "@/components/dashboard/ClosedLostReasonsCard"
+import { ClosedWonCard } from "@/components/dashboard/ClosedWonCard"
 import { CopilotPanel } from "@/components/copilot/CopilotPanel"
 import { AdminSettingsButton } from "@/components/admin/AdminSettingsModal"
 import { TimeFilterBar } from "@/components/dashboard/TimeFilterBar"
@@ -70,13 +71,16 @@ function Dashboard({
         {copilotError && <CopilotErrorBanner message={copilotError} onDismiss={onDismissCopilotError} />}
         <TimeFilterBar />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <ClosedWonCard />
+          <RepRevenueCard />
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <WinRateCard />
           <PipelineCard />
           <GeographicCard />
           <SalesCycleCard />
           <StageWinRateCard />
           <StageConversionCard />
-          <RepRevenueCard />
           <ClosedLostReasonsCard />
         </div>
         <CopilotPanel hasKey={hasKey} onSettingsChange={onSettingsChange} />
