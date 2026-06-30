@@ -1,6 +1,6 @@
 "use client"
 
-import { useCopilotReadable, useCopilotAction } from "@copilotkit/react-core"
+import { useCopilotReadable, useCopilotAction, useCopilotContext } from "@copilotkit/react-core"
 import { CopilotPopup } from "@copilotkit/react-ui"
 import "@copilotkit/react-ui/styles.css"
 import { useDeals } from "@/lib/data/deals-context"
@@ -8,7 +8,7 @@ import { calcWinRate } from "@/lib/calculations/win-rate"
 import { calcGeographic } from "@/lib/calculations/geographic"
 import { calcPipeline } from "@/lib/calculations/pipeline"
 import { calcSalesCycle } from "@/lib/calculations/sales-cycle"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { BarChart } from "@/components/charts/BarChart"
 import { LineChart } from "@/components/charts/LineChart"
 import { FunnelChart } from "@/components/charts/FunnelChart"
@@ -24,9 +24,103 @@ interface GeneratedChart {
   props: Record<string, any>
 }
 
-export function CopilotPanel({ hasKey, onSettingsChange }: { hasKey: boolean; onSettingsChange: (s: AISettings) => void }) {
+export function CopilotPanel({
+  hasKey,
+  onSettingsChange,
+  onError,
+}: {
+  hasKey: boolean
+  onSettingsChange: (s: AISettings) => void
+  onError: (msg: string) => void
+}) {
   const { deals } = useDeals()
+  useCopilotContext() // keep provider subscription alive
   const [generatedCharts, setGeneratedCharts] = useState<GeneratedChart[]>([])
+
+  // CopilotKit surfaces provider errors (401, 402, etc.) as RUN_ERROR SSE events
+  // and handles them internally — the onError prop on <CopilotKit> is not called.
+  // Intercept fetch to detect these events directly from the SSE stream.
+  useEffect(() => {
+    const orig = window.fetch
+
+    function classifyAndReport(status: number | undefined, msg: string) {
+      if (status === 402 || /credit|balance|quota|insufficient/i.test(msg)) {
+        onError("Insufficient credits. Top up your API account or enter a different key in AI settings (⚙).")
+      } else if (status === 401 || status === 403 || /key|auth|x-api-key|unauthorized|forbidden/i.test(msg)) {
+        onError("API key is invalid or missing. Check your key in AI settings (⚙).")
+      } else if (status === 429 || /rate.?limit|too many/i.test(msg)) {
+        onError("Rate limit hit. Wait a moment, then try again.")
+      } else if (msg) {
+        onError(`AI assistant error: ${msg}`)
+      }
+    }
+
+    window.fetch = async function (...args: Parameters<typeof fetch>) {
+      const input = args[0]
+      const url =
+        typeof input === "string"
+          ? input
+          : input instanceof URL
+          ? input.href
+          : (input as Request).url ?? ""
+
+      if (!url.includes("/api/copilotkit")) return orig.apply(window, args)
+
+      let response: Response
+      try {
+        response = await orig.apply(window, args)
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : "Network error"
+        classifyAndReport(undefined, msg)
+        throw err
+      }
+
+      // Non-2xx: our try-catch in the route returned a real HTTP error
+      if (!response.ok) {
+        response
+          .clone()
+          .json()
+          .then((data: Record<string, string>) => {
+            classifyAndReport(response.status, data?.error ?? data?.message ?? `HTTP ${response.status}`)
+          })
+          .catch(() => {})
+        return response
+      }
+
+      // 200 with streaming body — parse SSE events for RUN_ERROR
+      const clone = response.clone()
+      const reader = clone.body?.getReader()
+      if (reader) {
+        const dec = new TextDecoder()
+        ;(async () => {
+          let buf = ""
+          try {
+            for (;;) {
+              const { done, value } = await reader.read()
+              if (done) break
+              buf += dec.decode(value, { stream: true })
+              const lines = buf.split("\n")
+              buf = lines.pop() ?? ""
+              for (const line of lines) {
+                if (!line.startsWith("data: ")) continue
+                try {
+                  const ev = JSON.parse(line.slice(6)) as { type?: string; message?: string; error?: { message?: string } }
+                  if (ev.type === "RUN_ERROR") {
+                    const msg = ev.error?.message ?? ev.message ?? "Unknown error"
+                    classifyAndReport(undefined, msg)
+                  }
+                } catch { /* non-JSON lines are normal */ }
+              }
+            }
+          } catch { /* stream aborted */ }
+        })()
+      }
+
+      return response
+    } as typeof fetch
+
+    return () => { window.fetch = orig }
+  }, [onError])
 
   const winRate = calcWinRate(deals)
   const geo = calcGeographic(deals)

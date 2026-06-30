@@ -47,11 +47,13 @@ function Dashboard({
   copilotError,
   onDismissCopilotError,
   onSettingsChange,
+  onCopilotError,
   hasKey,
 }: {
   copilotError: string | null
   onDismissCopilotError: () => void
   onSettingsChange: (s: AISettings) => void
+  onCopilotError: (msg: string) => void
   hasKey: boolean
 }) {
   return (
@@ -89,7 +91,7 @@ function Dashboard({
           <WonTrendsCard />
           <PipelineTrendsCard />
         </div>
-        <CopilotPanel hasKey={hasKey} onSettingsChange={onSettingsChange} />
+        <CopilotPanel hasKey={hasKey} onSettingsChange={onSettingsChange} onError={onCopilotError} />
       </main>
     </div>
   )
@@ -139,6 +141,7 @@ export default function Home() {
           copilotError={copilotError}
           onDismissCopilotError={() => setCopilotError(null)}
           onSettingsChange={(s) => { setAISettings(s); setCopilotError(null) }}
+          onCopilotError={setCopilotError}
           hasKey={!!activeKey}
         />
       </DealsProvider>
