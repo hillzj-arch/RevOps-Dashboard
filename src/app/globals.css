@@ -32,3 +32,10 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Suppress CopilotKit's built-in error banner and dev-console inspector.
+   We handle all AI errors via our own banner in the page header area. */
+[data-testid="copilot-error-banner"],
+.copilotKitDevConsole {
+  display: none !important;
+}
